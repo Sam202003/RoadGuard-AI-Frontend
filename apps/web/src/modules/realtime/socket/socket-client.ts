@@ -23,9 +23,9 @@ export function connectSocket(token: string): Socket {
     transports: ['websocket', 'polling'],
     autoConnect: true,
     reconnection: true,
-    reconnectionAttempts: Infinity,
-    reconnectionDelay: 1000,
-    reconnectionDelayMax: 8000,
+    reconnectionAttempts: 15,
+    reconnectionDelay: 2000,
+    reconnectionDelayMax: 10000,
   });
 
   return socketInstance;

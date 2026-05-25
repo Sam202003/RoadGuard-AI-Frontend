@@ -27,7 +27,6 @@ const SocketContext = createContext<SocketContextValue | null>(null);
 export function SocketProvider({ children }: { children: React.ReactNode }) {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const [connectionState, setConnectionState] = useState<SocketConnectionState>('DISCONNECTED');
-  const [, setTick] = useState(0);
 
   const bindSocket = useCallback((socket: NonNullable<ReturnType<typeof getSocketInstance>>) => {
     const onConnect = () => {
@@ -78,7 +77,6 @@ export function SocketProvider({ children }: { children: React.ReactNode }) {
     setConnectionState('CONNECTING');
     const socket = connectSocket(token);
     const cleanup = bindSocket(socket);
-    setTick((n) => n + 1);
 
     const heartbeat = setInterval(() => {
       if (socket.connected) {

@@ -1,5 +1,6 @@
 'use client';
 
+import { useCallback } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AlertTriangle, Loader2 } from 'lucide-react';
@@ -45,6 +46,20 @@ export function BreakdownRequestForm({ onSubmit, isSubmitting }: BreakdownReques
   const issueType = watch('issueType');
   const latitude = watch('latitude');
   const longitude = watch('longitude');
+
+  const handleLatitudeChange = useCallback(
+    (value: number | undefined) => {
+      setValue('latitude', value as number, { shouldValidate: true });
+    },
+    [setValue],
+  );
+
+  const handleLongitudeChange = useCallback(
+    (value: number | undefined) => {
+      setValue('longitude', value as number, { shouldValidate: true });
+    },
+    [setValue],
+  );
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
@@ -130,8 +145,8 @@ export function BreakdownRequestForm({ onSubmit, isSubmitting }: BreakdownReques
         <LocationSelector
           latitude={latitude}
           longitude={longitude}
-          onLatitudeChange={(v) => setValue('latitude', v as number, { shouldValidate: true })}
-          onLongitudeChange={(v) => setValue('longitude', v as number, { shouldValidate: true })}
+          onLatitudeChange={handleLatitudeChange}
+          onLongitudeChange={handleLongitudeChange}
           latError={errors.latitude?.message}
           lonError={errors.longitude?.message}
         />

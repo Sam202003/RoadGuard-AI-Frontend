@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { Loader2, MapPin, Navigation } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,12 +32,18 @@ export function LocationSelector({
     error: geoError,
   } = useGeolocation();
 
+  const onLatitudeChangeRef = useRef(onLatitudeChange);
+  const onLongitudeChangeRef = useRef(onLongitudeChange);
+  onLatitudeChangeRef.current = onLatitudeChange;
+  onLongitudeChangeRef.current = onLongitudeChange;
+
+  // Only react to geolocation results — not parent inline callbacks (avoids setValue loops).
   useEffect(() => {
-    if (detectedLat != null && detectedLon != null) {
-      onLatitudeChange(detectedLat);
-      onLongitudeChange(detectedLon);
-    }
-  }, [detectedLat, detectedLon, onLatitudeChange, onLongitudeChange]);
+    if (detectedLat == null || detectedLon == null) return;
+    if (latitude === detectedLat && longitude === detectedLon) return;
+    onLatitudeChangeRef.current(detectedLat);
+    onLongitudeChangeRef.current(detectedLon);
+  }, [detectedLat, detectedLon, latitude, longitude]);
 
   return (
     <div className="space-y-4 rounded-xl border border-border/60 bg-card/40 p-4">
