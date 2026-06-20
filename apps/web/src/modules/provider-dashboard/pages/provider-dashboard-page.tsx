@@ -10,13 +10,11 @@ import { getErrorMessage } from '@/lib/get-error-message';
 import { useListBreakdownRequestsQuery } from '@/store/api/breakdown.api';
 import { useGetMyProviderQuery } from '@/store/api/provider.api';
 import { PROVIDER_BREAKDOWN_LIST_QUERY } from '../constants/provider-query';
-import { LocationUpdateForm } from '../components/location-update-form';
 import { ProviderMetricsCards } from '../components/provider-metrics-cards';
 import { ProviderProfileCard } from '../components/provider-profile-card';
 import { ProviderRequestCard } from '../components/provider-request-card';
 import { ProviderRequestsEmptyState } from '../components/provider-empty-state';
 import { ProviderDashboardSkeleton } from '../components/provider-skeleton';
-import { ProviderStatusToggles } from '../components/provider-status-toggles';
 import { RequestDetailSheet } from '../components/request-detail-sheet';
 import type { BreakdownRequest } from '@/modules/breakdown-requests/types/breakdown.types';
 import {
@@ -74,14 +72,22 @@ export function ProviderDashboardPage() {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <DashboardPageHeader
           title="Dispatch dashboard"
-          description="Manage jobs, availability, and your live service area."
+          description="Overview of active jobs and dispatch performance."
         />
-        <Button variant="outline" asChild className="shrink-0 gap-2">
-          <Link href={routes.provider.requests}>
-            All requests
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </Button>
+        <div className="flex shrink-0 flex-wrap gap-2">
+          <Button variant="outline" asChild className="gap-2">
+            <Link href={routes.provider.availability}>
+              Availability
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+          <Button variant="outline" asChild className="gap-2">
+            <Link href={routes.provider.requests}>
+              All requests
+              <ArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
+        </div>
       </div>
 
       <ProviderMetricsCards
@@ -90,12 +96,7 @@ export function ProviderDashboardPage() {
         provider={provider}
       />
 
-      <div className="grid gap-6 lg:grid-cols-2">
-        <ProviderProfileCard provider={provider} />
-        <ProviderStatusToggles provider={provider} />
-      </div>
-
-      <LocationUpdateForm provider={provider} />
+      <ProviderProfileCard provider={provider} />
 
       <section className="space-y-4">
         <h2 className="text-lg font-semibold">Active jobs</h2>

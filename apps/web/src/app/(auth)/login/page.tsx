@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import { AuthShell, LoginForm } from '@/modules/auth';
 
 export default function LoginPage() {
@@ -6,7 +7,9 @@ export default function LoginPage() {
       title="Welcome back"
       description="Sign in to your Road Guard account to get roadside assistance."
     >
-      <LoginForm />
+      <Suspense fallback={null}>
+        <LoginForm />
+      </Suspense>
     </AuthShell>
   );
 }

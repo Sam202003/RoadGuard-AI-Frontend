@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, AlertTriangle, MapPin, User } from 'lucide-react';
 import { routes } from '@roadguard/config';
@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { getErrorMessage } from '@/lib/get-error-message';
+import { usePollWhenDisconnected } from '@/modules/realtime';
 import { useGetBreakdownRequestQuery } from '@/store/api/breakdown.api';
 import {
   PriorityBadge,
@@ -36,11 +37,10 @@ export function ProviderRequestDetailPage({ requestId }: ProviderRequestDetailPa
   const { data: request, isLoading, isError, error, refetch } =
     useGetBreakdownRequestQuery(requestId);
 
-  useEffect(() => {
-    if (!request || isTerminalBreakdownStatus(request.status)) return;
-    const timer = setInterval(() => void refetch(), 10_000);
-    return () => clearInterval(timer);
-  }, [request, requestId, refetch]);
+  usePollWhenDisconnected(
+    refetch,
+    !!request && !isTerminalBreakdownStatus(request.status),
+  );
 
   if (isLoading) {
     return (
@@ -102,12 +102,14 @@ export function ProviderRequestDetailPage({ requestId }: ProviderRequestDetailPa
               <dt className="text-muted-foreground">Customer</dt>
               <dd className="mt-1 flex items-center gap-1 font-medium">
                 <User className="h-4 w-4" />
-                {formatShortId(request.customerId)}
+                {request.customerName ?? formatShortId(request.customerId)}
               </dd>
             </div>
             <div>
               <dt className="text-muted-foreground">Vehicle</dt>
-              <dd className="mt-1 font-medium">{formatShortId(request.vehicleId)}</dd>
+              <dd className="mt-1 font-medium">
+                {request.vehicleLabel ?? formatShortId(request.vehicleId)}
+              </dd>
             </div>
             <div className="sm:col-span-2">
               <dt className="text-muted-foreground">Pickup location</dt>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, MapPin } from 'lucide-react';
 import { toast } from 'sonner';
@@ -9,6 +9,7 @@ import { DashboardContent, DashboardPageHeader } from '@/modules/dashboard';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { getErrorMessage } from '@/lib/get-error-message';
+import { usePollWhenDisconnected } from '@/modules/realtime';
 import {
   useCancelBreakdownRequestMutation,
   useGetBreakdownRequestQuery,
@@ -40,13 +41,10 @@ export function BreakdownDetailPage({ requestId }: BreakdownDetailPageProps) {
   const { data: request, isLoading, isError, error, refetch } =
     useGetBreakdownRequestQuery(requestId);
 
-  useEffect(() => {
-    if (!request || isTerminalBreakdownStatus(request.status)) return;
-    const timer = setInterval(() => {
-      void refetch();
-    }, 10_000);
-    return () => clearInterval(timer);
-  }, [request, requestId, refetch]);
+  usePollWhenDisconnected(
+    refetch,
+    !!request && !isTerminalBreakdownStatus(request.status),
+  );
 
   const [cancelRequest, { isLoading: isCancelling }] = useCancelBreakdownRequestMutation();
 

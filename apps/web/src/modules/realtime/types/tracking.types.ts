@@ -62,13 +62,19 @@ export interface AuthConnectedPayload {
 }
 
 export interface NotificationNewPayload {
-  notification: {
-    id: string;
-    title: string;
-    message: string;
-    type: string;
-    isRead: boolean;
-  };
+  notification: import('@/modules/notifications/types/notification.types').Notification;
+  timestamp: string;
+}
+
+export interface NotificationReadPayload {
+  notificationId: string;
+  userId: string;
+  timestamp: string;
+}
+
+export interface NotificationCountUpdatePayload {
+  userId: string;
+  unreadCount: number;
   timestamp: string;
 }
 

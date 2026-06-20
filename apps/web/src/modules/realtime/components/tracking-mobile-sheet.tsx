@@ -10,6 +10,7 @@ import { TrackingStatusCard } from './tracking-status-card';
 
 interface TrackingMobileSheetProps {
   open: boolean;
+  onOpenChange: (open: boolean) => void;
   status: BreakdownStatus;
   connectionState: SocketConnectionState;
   estimatedArrivalMinutes: number | null;
@@ -18,6 +19,7 @@ interface TrackingMobileSheetProps {
 
 export function TrackingMobileSheet({
   open,
+  onOpenChange,
   status,
   connectionState,
   estimatedArrivalMinutes,
@@ -34,7 +36,14 @@ export function TrackingMobileSheet({
           className="pointer-events-auto fixed inset-x-0 bottom-0 z-[1100] md:hidden"
         >
           <div className="mx-2 mb-2 max-h-[45vh] overflow-y-auto rounded-t-2xl border border-border/60 bg-background/95 p-4 shadow-2xl backdrop-blur-xl">
-            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-muted" />
+            <button
+              type="button"
+              aria-label="Close tracking panel"
+              className="mx-auto mb-3 flex h-6 w-full items-center justify-center"
+              onClick={() => onOpenChange(false)}
+            >
+              <span className="h-1 w-10 rounded-full bg-muted" />
+            </button>
             <div className="mb-3 flex items-center justify-between">
               <span className="text-sm font-semibold">Live tracking</span>
               <ConnectionIndicator state={connectionState} />

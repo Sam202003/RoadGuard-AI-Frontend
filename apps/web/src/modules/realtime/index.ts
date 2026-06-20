@@ -11,4 +11,4 @@ export { useSocketConnection } from './hooks/use-socket-connection';
 export { useRealtimeBreakdownTracking } from './hooks/use-realtime-breakdown-tracking';
 export { useProviderLocationEmitter } from './hooks/use-provider-location-emitter';
 export { useRealtimeNotifications } from './hooks/use-realtime-notifications';
-export { useRealtimeRequestRoom } from './hooks/use-realtime-request-room';
+export { usePollWhenDisconnected } from './hooks/use-poll-when-disconnected';

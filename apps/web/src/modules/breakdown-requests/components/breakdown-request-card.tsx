@@ -1,5 +1,6 @@
 'use client';
 
+import { memo } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ChevronRight, MapPin } from 'lucide-react';
@@ -15,7 +16,9 @@ interface BreakdownRequestCardProps {
   request: BreakdownRequest;
 }
 
-export function BreakdownRequestCard({ request }: BreakdownRequestCardProps) {
+export const BreakdownRequestCard = memo(function BreakdownRequestCard({
+  request,
+}: BreakdownRequestCardProps) {
   const isEmergency = request.priority === RequestPriority.EMERGENCY;
 
   return (
@@ -52,4 +55,4 @@ export function BreakdownRequestCard({ request }: BreakdownRequestCardProps) {
       </Link>
     </motion.div>
   );
-}
+});

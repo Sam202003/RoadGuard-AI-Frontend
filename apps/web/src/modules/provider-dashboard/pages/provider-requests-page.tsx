@@ -37,6 +37,7 @@ export function ProviderRequestsPage() {
 
   const { data, isLoading, isError, error, refetch } = useListBreakdownRequestsQuery(queryArg);
   const requests = sortRequestsByPriority(data?.requests ?? []);
+  const hasFilter = statusFilter !== 'ALL';
 
   return (
     <DashboardContent>
@@ -45,24 +46,22 @@ export function ProviderRequestsPage() {
         description="Your full job queue — active, completed, and cancelled."
       />
 
-      {requests.length > 0 && (
-        <Select
-          value={statusFilter}
-          onValueChange={(v) => setStatusFilter(v as BreakdownStatus | 'ALL')}
-        >
-          <SelectTrigger className="w-full sm:w-[240px]">
-            <SelectValue placeholder="Filter status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">All statuses</SelectItem>
-            {Object.values(BreakdownStatus).map((status) => (
-              <SelectItem key={status} value={status}>
-                {statusLabels[status]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )}
+      <Select
+        value={statusFilter}
+        onValueChange={(v) => setStatusFilter(v as BreakdownStatus | 'ALL')}
+      >
+        <SelectTrigger className="w-full sm:w-[240px]">
+          <SelectValue placeholder="Filter status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">All statuses</SelectItem>
+          {Object.values(BreakdownStatus).map((status) => (
+            <SelectItem key={status} value={status}>
+              {statusLabels[status]}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       {isLoading && <ProviderRequestListSkeleton />}
 
@@ -78,7 +77,12 @@ export function ProviderRequestsPage() {
         </div>
       )}
 
-      {!isLoading && !isError && requests.length === 0 && <ProviderRequestsEmptyState />}
+      {!isLoading && !isError && requests.length === 0 && (
+        <ProviderRequestsEmptyState
+          filtered={hasFilter}
+          onClearFilter={hasFilter ? () => setStatusFilter('ALL') : undefined}
+        />
+      )}
 
       {!isLoading && !isError && requests.length > 0 && (
         <div className="space-y-4">

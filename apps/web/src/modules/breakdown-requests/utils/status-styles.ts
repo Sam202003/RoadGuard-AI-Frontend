@@ -12,7 +12,7 @@ export function getStatusBadgeClass(status: BreakdownStatus): string {
     case BreakdownStatus.IN_PROGRESS:
       return 'border-violet-500/30 bg-violet-500/10 text-violet-700 dark:text-violet-400';
     case BreakdownStatus.COMPLETED:
-      return 'border-emerald-500/30 bg-emerald-500/10 text-emerald-700 dark:text-emerald-400';
+      return 'border-primary/30 bg-primary/10 text-brand-navy dark:text-primary';
     case BreakdownStatus.CANCELLED:
       return 'border-destructive/30 bg-destructive/10 text-destructive';
     default:

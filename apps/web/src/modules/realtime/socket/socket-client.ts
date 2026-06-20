@@ -9,6 +9,7 @@ export function getSocketInstance(): Socket | null {
 
 export function connectSocket(token: string): Socket {
   if (socketInstance?.connected) {
+    socketInstance.auth = { token };
     return socketInstance;
   }
 
@@ -37,4 +38,14 @@ export function disconnectSocket(): void {
     socketInstance.disconnect();
     socketInstance = null;
   }
+}
+
+export function reconnectSocketWithToken(token: string): void {
+  if (!socketInstance) return;
+
+  socketInstance.auth = { token };
+  if (socketInstance.connected) {
+    socketInstance.disconnect();
+  }
+  socketInstance.connect();
 }

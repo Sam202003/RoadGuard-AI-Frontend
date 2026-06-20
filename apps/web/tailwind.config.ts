@@ -46,6 +46,10 @@ const config: Config = {
           border: 'hsl(var(--sidebar-border))',
           accent: 'hsl(var(--sidebar-accent))',
         },
+        brand: {
+          navy: 'hsl(var(--brand-navy) / <alpha-value>)',
+          orange: 'hsl(var(--brand-orange) / <alpha-value>)',
+        },
       },
       borderRadius: {
         lg: 'var(--radius)',

@@ -35,7 +35,7 @@ export function ProviderMetricsCards({
       label: 'Completed (profile)',
       value: String(provider?.totalCompletedRequests ?? completedCount),
       icon: CheckCircle2,
-      accent: 'text-emerald-600 dark:text-emerald-400',
+      accent: 'text-primary',
     },
     {
       label: 'Availability',
@@ -43,7 +43,7 @@ export function ProviderMetricsCards({
       icon: Radio,
       accent:
         availability === AvailabilityStatus.AVAILABLE
-          ? 'text-emerald-600 dark:text-emerald-400'
+          ? 'text-primary'
           : availability === AvailabilityStatus.BUSY
             ? 'text-amber-600 dark:text-amber-400'
             : 'text-muted-foreground',

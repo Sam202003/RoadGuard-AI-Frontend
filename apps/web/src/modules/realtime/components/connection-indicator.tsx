@@ -10,7 +10,7 @@ const labels: Record<SocketConnectionState, string> = {
 
 const dotClass: Record<SocketConnectionState, string> = {
   CONNECTING: 'bg-amber-500 animate-pulse',
-  CONNECTED: 'bg-emerald-500',
+  CONNECTED: 'bg-primary',
   RECONNECTING: 'bg-amber-500 animate-pulse',
   DISCONNECTED: 'bg-muted-foreground',
 };

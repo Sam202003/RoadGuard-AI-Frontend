@@ -15,6 +15,9 @@ import { authApi } from './api/auth.api';
 import { vehiclesApi } from './api/vehicles.api';
 import { breakdownApi } from './api/breakdown.api';
 import { providerApi } from './api/provider.api';
+import { adminApi } from './api/admin.api';
+import { notificationsApi } from './api/notifications.api';
+import { aiApi } from './api/ai.api';
 
 const authPersistConfig = {
   key: 'auth',
@@ -28,6 +31,9 @@ const rootReducer = combineReducers({
   [vehiclesApi.reducerPath]: vehiclesApi.reducer,
   [breakdownApi.reducerPath]: breakdownApi.reducer,
   [providerApi.reducerPath]: providerApi.reducer,
+  [adminApi.reducerPath]: adminApi.reducer,
+  [notificationsApi.reducerPath]: notificationsApi.reducer,
+  [aiApi.reducerPath]: aiApi.reducer,
 });
 
 export const makeStore = () => {
@@ -43,6 +49,9 @@ export const makeStore = () => {
         vehiclesApi.middleware,
         breakdownApi.middleware,
         providerApi.middleware,
+        adminApi.middleware,
+        notificationsApi.middleware,
+        aiApi.middleware,
       ),
   });
 

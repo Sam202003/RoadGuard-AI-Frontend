@@ -4,56 +4,60 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Road Guard brand: navy #0B1B32 · orange #F27420 */
+    --brand-navy: 215 64% 12%;
+    --brand-orange: 25 89% 54%;
+
+    --background: 214 40% 98%;
+    --foreground: 215 64% 12%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --primary: 160 84% 39%;
+    --card-foreground: 215 64% 12%;
+    --primary: 25 89% 54%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --secondary: 214 32% 93%;
+    --secondary-foreground: 215 64% 12%;
+    --muted: 214 32% 93%;
+    --muted-foreground: 215 20% 40%;
+    --accent: 25 89% 96%;
+    --accent-foreground: 215 64% 12%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 160 84% 39%;
+    --border: 214 24% 88%;
+    --input: 214 24% 88%;
+    --ring: 25 89% 54%;
     --radius: 0.75rem;
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
-    --sidebar: 0 0% 98%;
-    --sidebar-foreground: 222.2 47.4% 11.2%;
-    --sidebar-border: 214.3 31.8% 91.4%;
-    --sidebar-accent: 160 40% 96%;
+    --popover-foreground: 215 64% 12%;
+    --sidebar: 214 40% 97%;
+    --sidebar-foreground: 215 64% 12%;
+    --sidebar-border: 214 24% 88%;
+    --sidebar-accent: 25 89% 95%;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 215 64% 7%;
     --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
+    --card: 215 55% 10%;
     --card-foreground: 210 40% 98%;
-    --primary: 160 70% 45%;
+    --primary: 25 89% 54%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 217.2 32.6% 17.5%;
+    --secondary: 215 40% 16%;
     --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
+    --muted: 215 40% 16%;
+    --muted-foreground: 215 16% 65%;
+    --accent: 215 40% 16%;
     --accent-foreground: 210 40% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 160 70% 45%;
-    --popover: 222.2 84% 4.9%;
+    --border: 215 32% 18%;
+    --input: 215 32% 18%;
+    --ring: 25 89% 54%;
+    --popover: 215 55% 10%;
     --popover-foreground: 210 40% 98%;
-    --sidebar: 222.2 47.4% 8%;
+    --sidebar: 215 64% 9%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-border: 217.2 32.6% 17.5%;
-    --sidebar-accent: 217.2 32.6% 14%;
+    --sidebar-border: 215 32% 18%;
+    --sidebar-accent: 215 40% 14%;
   }
 }
 

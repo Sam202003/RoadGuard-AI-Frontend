@@ -13,6 +13,10 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 export const metadata: Metadata = {
   title: 'Road Guard',
   description: 'AI-powered roadside assistance',
+  icons: {
+    icon: '/images/roadguardlogo.png',
+    apple: '/images/roadguardlogo.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

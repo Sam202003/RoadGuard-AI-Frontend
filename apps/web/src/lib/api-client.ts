@@ -1,6 +1,7 @@
 import { getApiBaseUrl } from '@roadguard/config';
 import type { ApiErrorResponse, ApiSuccessResponse } from '@roadguard/types';
 import { getAccessToken } from './auth-storage';
+import { refreshAccessTokenRequest } from './refresh-access-token';
 
 export class ApiClientError extends Error {
   constructor(
@@ -18,10 +19,28 @@ interface RequestOptions extends Omit<RequestInit, 'body'> {
   auth?: boolean;
 }
 
-export async function apiRequest<T>(
+let refreshPromise: Promise<string> | null = null;
+
+async function getValidAccessToken(retryRefresh: boolean): Promise<string | null> {
+  const token = getAccessToken();
+  if (token || !retryRefresh) return token;
+
+  if (!refreshPromise) {
+    refreshPromise = refreshAccessTokenRequest()
+      .then((tokens) => tokens.accessToken)
+      .finally(() => {
+        refreshPromise = null;
+      });
+  }
+
+  return refreshPromise;
+}
+
+async function executeRequest<T>(
   path: string,
-  options: RequestOptions = {},
-): Promise<T> {
+  options: RequestOptions,
+  allowRefresh: boolean,
+): Promise<{ response: Response; json: ApiSuccessResponse<T> | ApiErrorResponse }> {
   const { body, auth = false, headers: customHeaders, ...rest } = options;
   const headers = new Headers(customHeaders);
 
@@ -30,7 +49,7 @@ export async function apiRequest<T>(
   }
 
   if (auth) {
-    const token = getAccessToken();
+    const token = await getValidAccessToken(allowRefresh);
     if (token) {
       headers.set('Authorization', `Bearer ${token}`);
     }
@@ -43,6 +62,22 @@ export async function apiRequest<T>(
   });
 
   const json = (await response.json()) as ApiSuccessResponse<T> | ApiErrorResponse;
+  return { response, json };
+}
+
+export async function apiRequest<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<T> {
+  const { auth = false } = options;
+  let { response, json } = await executeRequest<T>(path, options, false);
+
+  if (auth && response.status === 401) {
+    const refreshed = await getValidAccessToken(true);
+    if (refreshed) {
+      ({ response, json } = await executeRequest<T>(path, options, false));
+    }
+  }
 
   if (!response.ok || !json.success) {
     const message = json.success === false ? json.message : 'Request failed';
@@ -62,27 +97,15 @@ export async function apiRequestWithMeta<T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<ApiRequestResult<T>> {
-  const { body, auth = false, headers: customHeaders, ...rest } = options;
-  const headers = new Headers(customHeaders);
+  const { auth = false } = options;
+  let { response, json } = await executeRequest<T>(path, options, false);
 
-  if (body !== undefined) {
-    headers.set('Content-Type', 'application/json');
-  }
-
-  if (auth) {
-    const token = getAccessToken();
-    if (token) {
-      headers.set('Authorization', `Bearer ${token}`);
+  if (auth && response.status === 401) {
+    const refreshed = await getValidAccessToken(true);
+    if (refreshed) {
+      ({ response, json } = await executeRequest<T>(path, options, false));
     }
   }
-
-  const response = await fetch(`${getApiBaseUrl()}${path}`, {
-    ...rest,
-    headers,
-    body: body !== undefined ? JSON.stringify(body) : undefined,
-  });
-
-  const json = (await response.json()) as ApiSuccessResponse<T> | ApiErrorResponse;
 
   if (!response.ok || !json.success) {
     const message = json.success === false ? json.message : 'Request failed';

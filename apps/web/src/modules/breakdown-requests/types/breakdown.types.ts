@@ -34,6 +34,8 @@ export interface BreakdownRequest {
   trackingEnabled: boolean;
   createdAt: string;
   updatedAt: string;
+  customerName?: string | null;
+  vehicleLabel?: string | null;
 }
 
 export interface ListBreakdownRequestsParams {

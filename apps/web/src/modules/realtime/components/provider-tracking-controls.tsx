@@ -94,7 +94,7 @@ export function ProviderTrackingControls({ request }: ProviderTrackingControlsPr
       </div>
 
       {isTracking && (
-        <p className="mt-3 flex items-center gap-2 text-xs text-emerald-600 dark:text-emerald-400">
+        <p className="mt-3 flex items-center gap-2 text-xs text-primary">
           <Loader2 className="h-3.5 w-3.5 animate-spin" />
           Emitting live location…
         </p>

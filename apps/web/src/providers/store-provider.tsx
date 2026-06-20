@@ -3,6 +3,7 @@
 import { useRef } from 'react';
 import { Provider } from 'react-redux';
 import { PersistGate } from 'redux-persist/integration/react';
+import { AuthLoadingSpinner } from '@/components/auth-loading-spinner';
 import { makePersistor, makeStore, type AppStore } from '@/store';
 
 export function StoreProvider({ children }: { children: React.ReactNode }) {
@@ -16,7 +17,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <Provider store={storeRef.current}>
-      <PersistGate loading={null} persistor={persistorRef.current!}>
+      <PersistGate loading={<AuthLoadingSpinner />} persistor={persistorRef.current!}>
         {children}
       </PersistGate>
     </Provider>

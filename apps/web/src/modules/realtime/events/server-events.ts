@@ -11,4 +11,6 @@ export const ServerEvents = {
   AUTH_CONNECTED: 'auth:connected',
   HEARTBEAT_ACK: 'heartbeat:ack',
   NOTIFICATION_NEW: 'notification:new',
+  NOTIFICATION_READ: 'notification:read',
+  NOTIFICATION_COUNT_UPDATE: 'notification:count:update',
 } as const;

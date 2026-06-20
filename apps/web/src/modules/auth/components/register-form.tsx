@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { Loader2 } from 'lucide-react';
@@ -12,6 +12,14 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from '@/components/ui/password-input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { ensureSessionCookie } from '@/lib/auth-storage';
 import { useRegisterMutation } from '@/store/api/auth.api';
 import { registerSchema, type RegisterFormValues } from '../validations/auth.schema';
 import { getErrorMessage } from '@/lib/get-error-message';
@@ -23,6 +31,7 @@ export function RegisterForm() {
 
   const {
     register,
+    control,
     handleSubmit,
     formState: { errors },
   } = useForm<RegisterFormValues>({
@@ -48,6 +57,7 @@ export function RegisterForm() {
         password: values.password,
         role: values.role,
       }).unwrap();
+      await ensureSessionCookie(result.tokens.accessToken);
       toast.success('Account created successfully');
       redirectByRole(result.user.role);
     } catch (error) {
@@ -102,14 +112,21 @@ export function RegisterForm() {
 
       <div className="space-y-2">
         <Label htmlFor="role">Account type</Label>
-        <select
-          id="role"
-          className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-          {...register('role')}
-        >
-          <option value={UserRole.CUSTOMER}>Customer — I need roadside help</option>
-          <option value={UserRole.PROVIDER}>Provider — I offer assistance</option>
-        </select>
+        <Controller
+          control={control}
+          name="role"
+          render={({ field }) => (
+            <Select value={field.value} onValueChange={field.onChange}>
+              <SelectTrigger id="role">
+                <SelectValue placeholder="Select account type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={UserRole.CUSTOMER}>Customer — I need roadside help</SelectItem>
+                <SelectItem value={UserRole.PROVIDER}>Provider — I offer assistance</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+        />
         {errors.role && <p className="text-sm text-destructive">{errors.role.message}</p>}
       </div>
 

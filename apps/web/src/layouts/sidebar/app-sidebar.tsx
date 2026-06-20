@@ -26,12 +26,12 @@ export function AppSidebar({ navigation, className, onNavigate }: AppSidebarProp
       animate={{ width: collapsed ? 72 : 260 }}
       transition={{ duration: 0.2, ease: 'easeInOut' }}
       className={cn(
-        'hidden h-full shrink-0 flex-col border-r border-sidebar-border bg-sidebar/80 backdrop-blur-xl md:flex',
+        'sticky top-0 hidden h-screen shrink-0 flex-col overflow-hidden border-r border-sidebar-border bg-sidebar text-sidebar-foreground backdrop-blur-xl md:flex',
         className,
       )}
     >
-      <div className="flex h-14 items-center justify-between px-3">
-        <SidebarBrand portalName={navigation.portalName} homeHref={navigation.homeHref} />
+      <div className="flex h-14 shrink-0 items-center justify-between px-3">
+        <SidebarBrand homeHref={navigation.homeHref} />
         <Button
           variant="ghost"
           size="icon"
@@ -42,7 +42,7 @@ export function AppSidebar({ navigation, className, onNavigate }: AppSidebarProp
           {collapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
         </Button>
       </div>
-      <Separator />
+      <Separator className="shrink-0" />
       <SidebarNav navigation={navigation} onNavigate={onNavigate} />
     </motion.aside>
   );

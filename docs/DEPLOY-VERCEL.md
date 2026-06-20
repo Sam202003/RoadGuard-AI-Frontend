@@ -19,9 +19,12 @@ If **Root Directory** is left empty (repo root), set **Output Directory** to `ap
 | `NEXT_PUBLIC_API_BASE_URL` | `https://roadguard-api.onrender.com/api/v1` |
 | `NEXT_PUBLIC_SOCKET_URL` | `https://roadguard-api.onrender.com` |
 | `NEXT_PUBLIC_SOCKET_PATH` | `/socket.io` |
+| `RG_SESSION_SECRET` | `openssl rand -base64 32` (32+ chars; signs HttpOnly session cookie) |
 
-Redeploy after changing `NEXT_PUBLIC_*` (baked in at build time).
+Redeploy after changing `NEXT_PUBLIC_*` (baked in at build time). Changing `RG_SESSION_SECRET` invalidates existing session cookies.
 
 ## Backend CORS
 
-On Render, set `CORS_ORIGIN` to your Vercel URL, e.g. `https://your-app.vercel.app`.
+On Render, set `CORS_ORIGIN` to your Vercel URL, e.g. `https://your-app.vercel.app`. Wildcard (`*`) is **not allowed** in production.
+
+See backend [MIGRATION-P1-SECURITY.md](../../RoadGuard-AI-Backend/docs/MIGRATION-P1-SECURITY.md) for full security migration notes.

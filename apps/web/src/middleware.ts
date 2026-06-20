@@ -1,19 +1,21 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { UserRole } from '@roadguard/types';
 import {
   authPaths,
   getDashboardPathForRole,
+  getRolePathPrefix,
+  isValidUserRole,
   protectedPrefixes,
   routes,
 } from '@roadguard/config';
+import { SESSION_COOKIE_NAME, verifySessionToken } from '@/lib/session-cookie';
 
-const AUTH_COOKIE = 'rg-auth';
-const ROLE_COOKIE = 'rg-auth-role';
-
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-  const hasSession = request.cookies.has(AUTH_COOKIE);
-  const roleCookie = request.cookies.get(ROLE_COOKIE)?.value as UserRole | undefined;
+  const sessionToken = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+  const session = await verifySessionToken(sessionToken);
+
+  const hasSession = Boolean(session);
+  const roleCookie = session?.role;
 
   const isAuthPath = authPaths.some((p) => pathname === p || pathname.startsWith(`${p}/`));
   const isProtected = protectedPrefixes.some((prefix) => pathname.startsWith(prefix));
@@ -24,7 +26,20 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(loginUrl);
   }
 
-  if (isAuthPath && hasSession && roleCookie) {
+  if (isProtected && hasSession && isValidUserRole(roleCookie)) {
+    const rolePrefix = getRolePathPrefix(roleCookie);
+    const onWrongPortal = protectedPrefixes.some(
+      (prefix) => pathname.startsWith(prefix) && !pathname.startsWith(rolePrefix),
+    );
+
+    if (onWrongPortal) {
+      return NextResponse.redirect(
+        new URL(getDashboardPathForRole(roleCookie), request.url),
+      );
+    }
+  }
+
+  if (isAuthPath && hasSession && isValidUserRole(roleCookie)) {
     return NextResponse.redirect(
       new URL(getDashboardPathForRole(roleCookie), request.url),
     );

@@ -2,9 +2,12 @@
 
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { AuthLoadingSpinner } from '@/components/auth-loading-spinner';
 import { getAccessToken } from '@/lib/auth-storage';
+import { registerTokenSyncHandler, registerSocketReconnectHandler } from '@/lib/token-refresh-sync';
+import { reconnectSocketWithToken } from '@/modules/realtime/socket/socket-client';
 import { useLazyGetMeQuery } from '@/store/api/auth.api';
-import { logout, setInitialized } from '@/store/auth.slice';
+import { logout, setInitialized, updateTokens } from '@/store/auth.slice';
 import { selectAuthInitialized } from '@/store/auth.selectors';
 import type { AppDispatch } from '@/store';
 
@@ -12,6 +15,13 @@ export function AuthBootstrap({ children }: { children: React.ReactNode }) {
   const dispatch = useDispatch<AppDispatch>();
   const initialized = useSelector(selectAuthInitialized);
   const [fetchMe] = useLazyGetMeQuery();
+
+  useEffect(() => {
+    registerTokenSyncHandler((tokens) => {
+      dispatch(updateTokens(tokens));
+    });
+    registerSocketReconnectHandler(reconnectSocketWithToken);
+  }, [dispatch]);
 
   useEffect(() => {
     const restore = async () => {
@@ -34,11 +44,7 @@ export function AuthBootstrap({ children }: { children: React.ReactNode }) {
   }, [dispatch, fetchMe, initialized]);
 
   if (!initialized) {
-    return (
-      <div className="flex min-h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-      </div>
-    );
+    return <AuthLoadingSpinner />;
   }
 
   return <>{children}</>;

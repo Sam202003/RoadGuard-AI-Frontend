@@ -17,12 +17,13 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { selectAuthUser } from '@/store/auth.selectors';
 import { useLogoutMutation } from '@/store/api/auth.api';
+import { cn } from '@/lib/utils';
 
 function getInitials(firstName: string, lastName: string): string {
   return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
 }
 
-export function ProfileDropdown() {
+export function ProfileDropdown({ triggerClassName }: { triggerClassName?: string }) {
   const user = useSelector(selectAuthUser);
   const router = useRouter();
   const [logout, { isLoading }] = useLogoutMutation();
@@ -42,10 +43,10 @@ export function ProfileDropdown() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-9 w-9 rounded-full">
+        <Button variant="ghost" className={cn('relative h-9 w-9 rounded-full', triggerClassName)}>
           <Avatar className="h-9 w-9">
             {user.profileImage && <AvatarImage src={user.profileImage} alt={user.firstName} />}
-            <AvatarFallback className="bg-primary/10 text-primary text-xs">
+            <AvatarFallback className="bg-primary/15 text-primary text-xs dark:bg-white/15 dark:text-white">
               {getInitials(user.firstName, user.lastName)}
             </AvatarFallback>
           </Avatar>

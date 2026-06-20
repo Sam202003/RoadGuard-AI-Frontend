@@ -18,7 +18,7 @@ export function MobileSidebar({ navigation }: MobileSidebarProps) {
     <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
       <SheetContent side="left" className="flex w-[280px] flex-col p-0">
         <div className="px-4 pt-6">
-          <SidebarBrand portalName={navigation.portalName} homeHref={navigation.homeHref} />
+          <SidebarBrand homeHref={navigation.homeHref} />
         </div>
         <Separator className="my-4" />
         <SidebarNav navigation={navigation} onNavigate={() => setMobileOpen(false)} />

@@ -2,6 +2,8 @@
 
 import { Loader2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import {
@@ -13,7 +15,7 @@ import {
 } from '@/components/ui/select';
 import { getErrorMessage } from '@/lib/get-error-message';
 import { useUpdateAvailabilityMutation } from '@/store/api/provider.api';
-import { AvailabilityStatus, OnlineStatus } from '../constants/provider.enums';
+import { AvailabilityStatus, KycStatus, OnlineStatus } from '../constants/provider.enums';
 import { availabilityLabels, onlineStatusLabels } from '../constants/provider-labels';
 import type { ProviderProfile } from '../types/provider.types';
 
@@ -23,6 +25,8 @@ interface ProviderStatusTogglesProps {
 
 export function ProviderStatusToggles({ provider }: ProviderStatusTogglesProps) {
   const [updateAvailability, { isLoading }] = useUpdateAvailabilityMutation();
+  const kycVerified = provider.kycStatus === KycStatus.VERIFIED;
+  const kycBlocked = !kycVerified;
 
   const handleAvailabilityChange = async (value: AvailabilityStatus) => {
     try {
@@ -51,13 +55,25 @@ export function ProviderStatusToggles({ provider }: ProviderStatusTogglesProps) 
         Control whether you receive new breakdown assignments.
       </p>
 
+      {kycBlocked && (
+        <div className="mt-4 rounded-lg border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-sm">
+          <p className="font-medium text-amber-900 dark:text-amber-100">
+            KYC verification required
+          </p>
+          <p className="mt-1 text-amber-800/90 dark:text-amber-200/90">
+            Your provider account is <Badge variant="outline">{provider.kycStatus}</Badge>.
+            An admin must verify your documents before you can go online and accept jobs.
+          </p>
+        </div>
+      )}
+
       <div className="mt-5 space-y-5">
         <div className="space-y-2">
           <Label>Availability</Label>
           <Select
             value={provider.availabilityStatus}
             onValueChange={(v) => handleAvailabilityChange(v as AvailabilityStatus)}
-            disabled={isLoading}
+            disabled={isLoading || (kycBlocked && provider.onlineStatus === OnlineStatus.OFFLINE)}
           >
             <SelectTrigger>
               <SelectValue />
@@ -84,10 +100,10 @@ export function ProviderStatusToggles({ provider }: ProviderStatusTogglesProps) 
               type="checkbox"
               className="peer sr-only"
               checked={provider.onlineStatus === OnlineStatus.ONLINE}
-              disabled={isLoading}
+              disabled={isLoading || kycBlocked}
               onChange={(e) => handleOnlineToggle(e.target.checked)}
             />
-            <span className="h-6 w-11 rounded-full bg-muted transition peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring" />
+            <span className="h-6 w-11 rounded-full bg-muted transition peer-checked:bg-primary peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-disabled:opacity-50" />
             <span className="absolute left-0.5 top-0.5 h-5 w-5 rounded-full bg-background shadow transition peer-checked:translate-x-5" />
             {isLoading && (
               <Loader2 className="absolute -right-8 h-4 w-4 animate-spin text-muted-foreground" />

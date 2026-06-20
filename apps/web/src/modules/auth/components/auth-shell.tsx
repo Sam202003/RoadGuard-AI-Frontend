@@ -1,7 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Shield } from 'lucide-react';
+import { RoadGuardLogo } from '@/components/brand/road-guard-logo';
 import { ThemeToggle } from '@/components/theme-toggle';
 import {
   Card,
@@ -19,7 +19,7 @@ interface AuthShellProps {
 
 export function AuthShell({ title, description, children }: AuthShellProps) {
   return (
-    <div className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-slate-50 via-white to-emerald-50 px-4 py-12 dark:from-slate-950 dark:via-slate-900 dark:to-emerald-950">
+    <div className="relative flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-brand-navy/5 via-background to-brand-orange/10 px-4 py-12 dark:from-brand-navy dark:via-brand-navy/90 dark:to-brand-orange/10">
       <div className="absolute right-4 top-4">
         <ThemeToggle />
       </div>
@@ -27,10 +27,9 @@ export function AuthShell({ title, description, children }: AuthShellProps) {
       <motion.div
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
-        className="mb-8 flex items-center gap-2 text-primary"
+        className="mb-8"
       >
-        <Shield className="h-8 w-8" />
-        <span className="text-2xl font-bold tracking-tight">Road Guard</span>
+        <RoadGuardLogo size="xl" priority />
       </motion.div>
 
       <Card className="w-full max-w-md border-border/60 shadow-xl">

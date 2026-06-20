@@ -20,6 +20,7 @@ interface CustomerLiveTrackingPanelProps {
 
 export function CustomerLiveTrackingPanel({ request }: CustomerLiveTrackingPanelProps) {
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(true);
   const { connectionState, isConnected } = useSocketConnection();
 
   const canTrack =
@@ -104,12 +105,23 @@ export function CustomerLiveTrackingPanel({ request }: CustomerLiveTrackingPanel
 
       {showMap && !isFullscreen && (
         <TrackingMobileSheet
-          open
+          open={mobileSheetOpen}
+          onOpenChange={setMobileSheetOpen}
           status={request.status}
           connectionState={connectionState}
           estimatedArrivalMinutes={tracking.estimatedArrivalMinutes}
           estimatedDistanceKm={tracking.estimatedDistanceKm}
         />
+      )}
+
+      {showMap && !isFullscreen && !mobileSheetOpen && (
+        <button
+          type="button"
+          className="fixed bottom-4 left-1/2 z-[1100] -translate-x-1/2 rounded-full border border-border/60 bg-background/95 px-4 py-2 text-sm font-medium shadow-lg backdrop-blur md:hidden"
+          onClick={() => setMobileSheetOpen(true)}
+        >
+          Show tracking details
+        </button>
       )}
     </>
   );

@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { PasswordInput } from '@/components/ui/password-input';
+import { ensureSessionCookie } from '@/lib/auth-storage';
 import { useLoginMutation } from '@/store/api/auth.api';
 import { loginSchema, type LoginFormValues } from '../validations/auth.schema';
 import { getErrorMessage } from '@/lib/get-error-message';
@@ -35,6 +36,7 @@ export function LoginForm() {
         email: values.email.toLowerCase().trim(),
         password: values.password,
       }).unwrap();
+      await ensureSessionCookie(result.tokens.accessToken);
       toast.success('Welcome back!');
       redirectByRole(result.user.role);
     } catch (error) {

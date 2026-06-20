@@ -34,6 +34,7 @@ export function BreakdownHistoryPage() {
 
   const { data, isLoading, isError, error, refetch } = useListBreakdownRequestsQuery(queryArg);
   const requests = data?.requests ?? [];
+  const hasFilter = statusFilter !== 'ALL';
 
   return (
     <DashboardContent>
@@ -50,24 +51,22 @@ export function BreakdownHistoryPage() {
         </Button>
       </div>
 
-      {requests.length > 0 && (
-        <Select
-          value={statusFilter}
-          onValueChange={(v) => setStatusFilter(v as BreakdownStatus | 'ALL')}
-        >
-          <SelectTrigger className="w-full sm:w-[220px]">
-            <SelectValue placeholder="Filter by status" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="ALL">All statuses</SelectItem>
-            {Object.values(BreakdownStatus).map((status) => (
-              <SelectItem key={status} value={status}>
-                {statusLabels[status]}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      )}
+      <Select
+        value={statusFilter}
+        onValueChange={(v) => setStatusFilter(v as BreakdownStatus | 'ALL')}
+      >
+        <SelectTrigger className="w-full sm:w-[220px]">
+          <SelectValue placeholder="Filter by status" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="ALL">All statuses</SelectItem>
+          {Object.values(BreakdownStatus).map((status) => (
+            <SelectItem key={status} value={status}>
+              {statusLabels[status]}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </Select>
 
       {isLoading && <BreakdownListSkeleton />}
 
@@ -83,7 +82,12 @@ export function BreakdownHistoryPage() {
         </div>
       )}
 
-      {!isLoading && !isError && requests.length === 0 && <BreakdownEmptyState />}
+      {!isLoading && !isError && requests.length === 0 && (
+        <BreakdownEmptyState
+          filtered={hasFilter}
+          onClearFilter={hasFilter ? () => setStatusFilter('ALL') : undefined}
+        />
+      )}
 
       {!isLoading && !isError && requests.length > 0 && (
         <div className="space-y-4">
