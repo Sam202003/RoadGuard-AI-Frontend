@@ -9,7 +9,7 @@ import {
   persistReducer,
   persistStore,
 } from 'redux-persist';
-import storage from 'redux-persist/lib/storage';
+import persistStorage from '@/lib/persist-storage';
 import { authReducer } from './auth.slice';
 import { authApi } from './api/auth.api';
 import { vehiclesApi } from './api/vehicles.api';
@@ -21,7 +21,7 @@ import { aiApi } from './api/ai.api';
 
 const authPersistConfig = {
   key: 'auth',
-  storage,
+  storage: persistStorage,
   whitelist: ['user', 'tokens', 'status'],
 };
 
